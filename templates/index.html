@@ -1,0 +1,44 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reddit Subreddit Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; background-color: #f0f0f5; }
+        textarea { width: 100%; height: 120px; }
+        button { padding: 0.5em 1em; font-size: 1em; margin-top: 1em; }
+        .result { margin-top: 1em; font-size: 1.2em; color: darkblue; }
+    </style>
+</head>
+<body>
+    <h1>Predict Your Subreddit</h1>
+    <form id="predictionForm">
+        <textarea name="post" id="post" placeholder="Enter your Reddit post here..."></textarea><br>
+        <button type="submit">Predict</button>
+    </form>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        const form = document.getElementById('predictionForm');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const postText = document.getElementById('post').value;
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ post: postText })
+            });
+
+            const data = await response.json();
+            resultDiv.innerHTML = `<strong>Predicted Subreddit:</strong> ${data.prediction}`;
+        });
+    </script>
+</body>
+</html>
